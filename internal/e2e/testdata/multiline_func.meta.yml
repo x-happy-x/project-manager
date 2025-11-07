@@ -1,0 +1,19 @@
+info:
+  name: multiline
+  description: test
+  root: __PROJECT_DIR__
+func:
+  setup:
+    params:
+      env:
+        required: true
+    script:
+      - "echo Setting up @{env}"
+      - "export ENV=@{env}"
+      - "echo Done"
+commands:
+  deploy:
+    description: Deploy
+    cmd:
+      - "_{setup(env=prod)}"
+      - "echo Deploying"

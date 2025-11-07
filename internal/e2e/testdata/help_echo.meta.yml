@@ -1,0 +1,11 @@
+info:
+  name: helpme
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  build:
+    description: Build it
+    cmd: "echo building"
+  run:
+    description: Run it
+    cmd: "echo running"

@@ -1,0 +1,8 @@
+info:
+  name: envtest
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  show:
+    description: Show env
+    cmd: "echo ${TEST_VAR}"

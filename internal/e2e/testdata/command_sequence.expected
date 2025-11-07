@@ -1,0 +1,5 @@
+pushd __PROJECT_DIR__
+sdk use java 21.0.8-tem
+./full-rebuild.sh -DskipTests -Pprod
+docker compose up -d
+popd >/dev/null

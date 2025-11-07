@@ -1,0 +1,4 @@
+echo Setting up prod
+export ENV=prod
+echo Done
+echo Deploying

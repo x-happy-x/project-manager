@@ -1,0 +1,4 @@
+pushd __PROJECT_DIR__
+echo hi
+echo X=42
+popd >/dev/null

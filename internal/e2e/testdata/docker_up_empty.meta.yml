@@ -1,0 +1,8 @@
+info:
+  name: docker
+  description: test
+  root: __PROJECT_DIR__
+docker:
+  compose_file: docker-compose.yml
+  groups:
+    base: [api, db]

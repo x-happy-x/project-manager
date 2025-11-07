@@ -1,0 +1,8 @@
+func:
+  greet:
+    params:
+      name:
+        required: true
+    script: "echo Hello, @{name}!"
+vars:
+  version: "1.2.3"

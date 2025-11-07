@@ -1,0 +1,5 @@
+func:
+  say:
+    script: "echo @{text}"
+vars:
+  x: "42"

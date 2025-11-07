@@ -1,0 +1,10 @@
+info:
+  name: global
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  welcome:
+    description: Welcome
+    cmd:
+      - "_{global.greet(name=World)}"
+      - "echo Version: #{global.vars.version}"

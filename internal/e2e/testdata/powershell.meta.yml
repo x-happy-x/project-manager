@@ -1,0 +1,8 @@
+info:
+  name: pwsh
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  run:
+    description: Run
+    cmd: "Write-Host 'Hello World'"

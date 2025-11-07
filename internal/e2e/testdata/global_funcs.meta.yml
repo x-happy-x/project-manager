@@ -1,0 +1,10 @@
+info:
+  name: gproj
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  hello:
+    description: Hello via global
+    cmd:
+      - "_{global.say(text='hi')}"
+      - "echo X=#{global.vars.x}"

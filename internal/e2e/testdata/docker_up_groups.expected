@@ -1,0 +1,3 @@
+pushd __PROJECT_DIR__
+docker compose -f docker-compose.yml up -d db redis api
+popd >/dev/null

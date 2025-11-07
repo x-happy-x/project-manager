@@ -1,0 +1,8 @@
+info:
+  name: cfgtest
+  description: Test config
+  root: __PROJECT_DIR__
+commands:
+  info:
+    description: Show info
+    cmd: "echo Project: #{info.name}"

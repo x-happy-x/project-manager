@@ -1,0 +1,3 @@
+Push-Location
+Write-Host 'Hello World'
+Pop-Location

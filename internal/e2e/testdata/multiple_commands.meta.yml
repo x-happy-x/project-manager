@@ -1,0 +1,14 @@
+info:
+  name: multi
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  clean:
+    description: Clean
+    cmd: "rm -rf @{args}"
+  build:
+    description: Build
+    cmd: "make @{args}"
+  test:
+    description: Test
+    cmd: "go test @{args}"

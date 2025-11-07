@@ -1,0 +1,5 @@
+pushd __PROJECT_DIR__
+pm: project commands:
+:build
+Build it
+popd >/dev/null

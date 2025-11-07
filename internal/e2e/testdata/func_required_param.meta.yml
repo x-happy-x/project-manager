@@ -1,0 +1,14 @@
+info:
+  name: reqparam
+  description: test
+  root: __PROJECT_DIR__
+func:
+  deploy:
+    params:
+      env:
+        required: true
+    script: "echo Deploying to @{env}"
+commands:
+  bad:
+    description: Bad call
+    cmd: "_{deploy()}"

@@ -1,0 +1,4 @@
+info:
+  name: rawproj
+  description: test
+  root: __PROJECT_DIR__

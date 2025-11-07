@@ -1,0 +1,19 @@
+info:
+  name: subzero
+  description: test
+  root: __PROJECT_DIR__
+func:
+  use-java:
+    params:
+      version:
+        required: true
+    script: "sdk use java @{version}"
+commands:
+  build:
+    description: Build app
+    cmd:
+      - "_{use-java(version=21.0.8-tem)}"
+      - "./full-rebuild.sh -DskipTests @{args}"
+  run:
+    description: Run infra
+    cmd: "docker compose up -d"

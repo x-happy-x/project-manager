@@ -1,0 +1,8 @@
+info:
+  name: unknown
+  description: test
+  root: __PROJECT_DIR__
+commands:
+  build:
+    description: Build
+    cmd: "make"
