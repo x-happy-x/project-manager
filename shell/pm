@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# pm - wrapper script for project manager
+# Builds commands via pm-bin and executes them
+
+set -euo pipefail
+
+# Detect pm-bin location (next to this script or in PATH)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PM_BIN="${PM_BIN:-$SCRIPT_DIR/../pm-bin}"
+
+if [[ ! -x "$PM_BIN" ]]; then
+    PM_BIN="$(command -v pm-bin 2>/dev/null || true)"
+fi
+
+if [[ -z "$PM_BIN" || ! -x "$PM_BIN" ]]; then
+    echo "Error: pm-bin not found. Build it first: go build -o pm-bin ./cmd/pm-bin" >&2
+    exit 1
+fi
+
+# If no args or special commands, just call pm-bin directly
+if [[ $# -eq 0 || "$1" == "ls" || "$1" == "add" || "$1" == "rm" || "$1" == "-h" || "$1" == "--help" ]]; then
+    "$PM_BIN" "$@"
+    exit $?
+fi
+
+# Generate script with bash dialect
+dialect="${PM_DIALECT:-bash}"
+script=$("$PM_BIN" --dialect "$dialect" "$@")
+exit_code=$?
+
+if [[ $exit_code -ne 0 ]]; then
+    exit $exit_code
+fi
+
+# Execute generated script if not empty
+if [[ -n "$script" ]]; then
+    eval "$script"
+fi
