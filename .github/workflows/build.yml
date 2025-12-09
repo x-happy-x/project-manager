@@ -1,0 +1,96 @@
+name: Build & Release
+
+on:
+  push:
+    branches:
+      - master                # каждый пуш в master собирает артефакты
+    tags:
+      - 'v*'                  # если создаётся тег вида v1.0.0 – делаем релиз
+  pull_request:
+    branches:
+      - master                # проверка PR‑ов тоже собирает, но без публикации
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]   # поддерживаемые ОС
+        goarch: [amd64]                  # пока только amd64 (можно добавить arm64)
+    env:
+      GO111MODULE: on
+      CGO_ENABLED: 0                     # статическая сборка без C‑зависимостей
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'            # актуальная версия (можно изменить)
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Run tests
+        run: go test ./...               # быстрые unit‑тесты (если есть)
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          BINARY_NAME=project-manager
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            BINARY_NAME="${BINARY_NAME}.exe"
+          fi
+          mkdir -p dist/${{ matrix.goos }}_${{ matrix.goarch }}
+          go build -ldflags="-s -w -X main.version=${GITHUB_REF#refs/tags/}" \
+                    -o dist/${{ matrix.goos }}_${{ matrix.goarch }}/$BINARY_NAME ./...
+
+      - name: Upload artifact (CI only)
+        if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.goos }}_${{ matrix.goarch }}
+          path: dist/${{ matrix.goos }}_${{ matrix.goarch }}/
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')   # только при теге
+    permissions:
+      contents: write                        # нужен доступ к релизам
+
+    steps:
+      - name: Download all built binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: ./release-bins
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+      - name: Upload binaries to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for file in $(find ./release-bins -type f); do
+            echo "Uploading $file ..."
+            gh release upload "${{ github.ref_name }}" "$file" --clobber
+          done
