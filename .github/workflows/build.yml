@@ -3,9 +3,9 @@ name: Build & Release
 on:
   push:
     branches:
-      - master                # каждый пуш в master собирает артефакты
+      - master
     tags:
-      - 'v*'                  # если создаётся тег вида v1.0.0 – делаем релиз
+      - 'R*'                  # если создаётся тег вида v1.0.0 – делаем релиз
   pull_request:
     branches:
       - master                # проверка PR‑ов тоже собирает, но без публикации
@@ -54,7 +54,7 @@ jobs:
           fi
           mkdir -p dist/${{ matrix.goos }}_${{ matrix.goarch }}
           go build -ldflags="-s -w -X main.version=${GITHUB_REF#refs/tags/}" \
-                    -o dist/${{ matrix.goos }}_${{ matrix.goarch }}/$BINARY_NAME ./...
+                    -o dist/${{ matrix.goos }}_${{ matrix.goarch }}/$BINARY_NAME ./cmd/pm-bin
 
       - name: Upload artifact (CI only)
         if: github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/')

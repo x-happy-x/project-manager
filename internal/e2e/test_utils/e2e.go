@@ -154,6 +154,8 @@ func GenerateScript(t *testing.T, command string, dialect string) string {
 	if err != nil {
 		t.Fatalf("render: %v", err)
 	}
+
+	t.Log("Generated script: " + out)
 	return out
 }
 
