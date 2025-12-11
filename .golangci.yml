@@ -1,0 +1,24 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck      # проверка необработанных ошибок
+    - gosimple      # упрощение кода
+    - govet         # стандартный go vet
+    - ineffassign   # неиспользуемые присваивания
+    - staticcheck   # множество проверок
+    - unused        # неиспользуемый код
+    - typecheck     # проверка типов
+
+linters-settings:
+  errcheck:
+    check-blank: false
+    check-type-assertions: false
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0

@@ -49,8 +49,10 @@ func RenderString(text string, params map[string]string, proj *config.ProjectMet
 			case string:
 				return v
 			default:
-				b, _ := json.Marshal(v)
-				return string(b)
+				if b, err := json.Marshal(v); err == nil {
+					return string(b)
+				}
+				return ""
 			}
 		}
 		return ""

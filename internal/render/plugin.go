@@ -81,7 +81,7 @@ func renderWith(r Renderer, pl *plan.Plan) string {
 }
 
 func renderExternal(exe string, pl *plan.Plan) (string, error) {
-	var root string = "."
+	root := "."
 	var ops []externalOp
 	for _, op := range pl.Ops {
 		switch v := op.(type) {
@@ -99,7 +99,10 @@ func renderExternal(exe string, pl *plan.Plan) (string, error) {
 		}
 	}
 	payload := externalPlan{Root: root, Ops: ops}
-	b, _ := json.Marshal(payload)
+	b, err := json.Marshal(payload)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal plan: %w", err)
+	}
 	cmd := exec.Command(exe, "--render")
 	cmd.Stdin = bytes.NewReader(b)
 	var out bytes.Buffer

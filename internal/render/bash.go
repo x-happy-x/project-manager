@@ -13,7 +13,7 @@ func (b bashRenderer) Name() string { return "bash" }
 
 func (b bashRenderer) Begin(root string) []string {
 	return []string{
-		fmt.Sprintf("# pm begin"),
+		"# pm begin",
 		fmt.Sprintf("pushd %s >/dev/null", sh(root)),
 	}
 }

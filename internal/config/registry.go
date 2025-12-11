@@ -62,6 +62,7 @@ func saveRegistry(r *Registry) error {
 	return os.WriteFile(registryFile(), b, 0o644)
 }
 
+// RegAdd adds a project to the registry from a meta file path.
 func RegAdd(metaPath string) error {
 	metaPath = expand(metaPath)
 	if _, err := os.Stat(metaPath); err != nil {
@@ -94,6 +95,7 @@ func RegAdd(metaPath string) error {
 	return saveRegistry(reg)
 }
 
+// RegRm removes a project from the registry by name.
 func RegRm(name string) error {
 	reg, err := loadRegistry()
 	if err != nil {
@@ -115,6 +117,7 @@ func RegRm(name string) error {
 	return saveRegistry(reg)
 }
 
+// RegLs lists all projects in the registry.
 func RegLs() error {
 	reg, err := loadRegistry()
 	if err != nil {
@@ -131,6 +134,7 @@ func RegLs() error {
 	return nil
 }
 
+// ResolveProject resolves a project by name or meta file path.
 func ResolveProject(nameOrPath string) (*ProjectMeta, string, error) {
 	cand := expand(nameOrPath)
 	if fileExists(cand) && (extEq(cand, ".yml") || extEq(cand, ".yaml")) {
@@ -157,6 +161,7 @@ func ResolveProject(nameOrPath string) (*ProjectMeta, string, error) {
 	return nil, "", fmt.Errorf("project not found in registry or file does not exist: %s", nameOrPath)
 }
 
+// LoadProjectMeta loads project metadata from a YAML file.
 func LoadProjectMeta(path string) (*ProjectMeta, error) {
 	b, err := os.ReadFile(expand(path))
 	if err != nil {
@@ -169,6 +174,7 @@ func LoadProjectMeta(path string) (*ProjectMeta, error) {
 	return &m, nil
 }
 
+// LoadGlobal loads global configuration from the global config file.
 func LoadGlobal() (*GlobalConfig, error) {
 	path := globalFile()
 	b, err := os.ReadFile(path)
