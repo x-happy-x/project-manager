@@ -118,18 +118,24 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: Prepare release archives
+      - name: Prepare release binaries
         run: |
           mkdir -p release
           cd artifacts
 
           for dir in binary-*/; do
             platform=$(echo "$dir" | sed 's/binary-//' | sed 's/\///')
-            tar -czf "../release/project-manager-${platform}.tar.gz" -C "$dir" .
+
+            # Копируем бинарник напрямую с именем pm_{platform}
+            if [ -f "$dir/project-manager.exe" ]; then
+              cp "$dir/project-manager.exe" "../release/pm_${platform}.exe"
+            else
+              cp "$dir/project-manager" "../release/pm_${platform}"
+            fi
           done
 
           cd ../release
-          sha256sum *.tar.gz > checksums.txt
+          sha256sum pm_* > checksums.txt
 
       - name: Extract tag message
         id: tag_message
@@ -151,5 +157,5 @@ jobs:
           prerelease: false
           generate_release_notes: true
           files: |
-            release/*.tar.gz
+            release/pm_*
             release/checksums.txt
