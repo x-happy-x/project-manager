@@ -49,31 +49,16 @@ LATEST_URL="$(
     | cut -d '"' -f4
 )"
 
-if [ -n "$LATEST_URL" ]; then
-  echo "==> Downloading binary:"
-  echo "    $LATEST_URL"
-  curl -fsSL -o "$BINARY_NAME" "$LATEST_URL"
-  chmod +x "$BINARY_NAME"
-  BINARY_PATH="$TEMP_DIR/$BINARY_NAME"
-else
-  echo "==> No prebuilt binary found, building from source"
-
-  if ! command -v git >/dev/null 2>&1; then
-    echo "==> git is required to build from source but not installed"
-    exit 1
-  fi
-
-  if ! command -v go >/dev/null 2>&1; then
-    echo "==> Go 1.21+ is required to build from source but not installed"
-    exit 1
-  fi
-
-  git clone "https://github.com/${REPO}.git" src
-  cd src
-  echo "==> Running go build"
-  go build -o "$BINARY_NAME" ./cmd/pm
-  BINARY_PATH="$PWD/$BINARY_NAME"
+if [ -z "$LATEST_URL" ]; then
+  echo "==> Error: No prebuilt binary found for ${OS_TYPE}_${ARCH_TYPE}"
+  exit 1
 fi
+
+echo "==> Downloading binary:"
+echo "    $LATEST_URL"
+curl -fsSL -o "$BINARY_NAME" "$LATEST_URL"
+chmod +x "$BINARY_NAME"
+BINARY_PATH="$TEMP_DIR/$BINARY_NAME"
 
 echo "==> Installing pm to ${INSTALL_DIR}"
 install -m 0755 "$BINARY_PATH" "${INSTALL_DIR}/pm"

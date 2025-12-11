@@ -124,7 +124,7 @@ jobs:
           cd artifacts
 
           for dir in binary-*/; do
-            platform=$(echo "$dir" | sed 's/binary-//' | sed 's/\///')
+            platform=$(echo "$dir" | sed 's/binary-//' | sed 's/\///' | sed 's/-/_/g')
 
             # Копируем бинарник напрямую с именем pm_{platform}
             if [ -f "$dir/project-manager.exe" ]; then
